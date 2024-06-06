@@ -1,13 +1,18 @@
 import os 
 import json
 
-
-
-
-def createCSVForDex(list):
-  with open(dex + "\\" + list[0] + " " + list[1].lower() + ".json", "w") as f:
-    json.dump(list, f)
-
+def createJSONForDex(list):
+  with open(dex + "\\" + list[0] + "_" + list[1].lower() + ".json", "w", encoding = 'utf-8') as f:
+    #Create Empty JSOn
+    output = {}
+    #Manually create name field
+    output["name"] = list[1]
+    #Create JSON for tasks
+    output["tasks"] = {}
+    #For each task, create a pair of the number of times the task has been achieved and the number required to complete
+    for element in list[2:]:
+      output["tasks"][element[0]] = [0,  element[1]]
+    json.dump(output, f)
 
 def readInTasks(tasks):
   for file in os.listdir(tasks):   
@@ -27,7 +32,7 @@ def readInTasks(tasks):
             #Get characters after the first parens, and remove the second parens
             num = out[i].split("(")[1][0:-1]
             out[i] = [out[i].split(" (")[0], num]
-        createCSVForDex(out)     
+        createJSONForDex(out)     
             
 if __name__ == "__main__":
   print("Default")
@@ -35,11 +40,17 @@ if __name__ == "__main__":
   dex = home + "\src\lib\dex"
   tasks = home + "\src\lib\\tasks"
 
+  #Idea for reset
+  # if (input("Would you like to reset")) == "T":
+  #   for file in os.listdir(dex):
+  #    if os.path.exists(dex + "\\" + file):
+  #     os.remove(dex + "\\" + file)
+      
+  
 
   #Reading in the master tasks file to create individual CSV's for each dex entry
   readInTasks(tasks)   
       
-  
       #Create the CSV file in the dex
 
   #Read the created CSV files for the remaining tasks
